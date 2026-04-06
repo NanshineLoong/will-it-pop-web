@@ -1,0 +1,130 @@
+import { useState, useRef, useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import questionsData from '../data/questions.json'
+import { sampleQuestions } from '../lib/game'
+import { submitFeedback, getQuestionStats } from '../lib/api'
+import QuestionCard from '../components/QuestionCard'
+import RevealPanel from '../components/RevealPanel'
+
+export default function Game() {
+  const { state } = useLocation()
+  const navigate = useNavigate()
+  const count = state?.count ?? 10
+
+  const [questions] = useState(() => sampleQuestions(questionsData.questions, count))
+  const [index, setIndex] = useState(0)
+  const [answers, setAnswers] = useState([])
+  const [selected, setSelected] = useState(null)   // null | true | false
+  const [revealed, setRevealed] = useState(false)
+  const [stats, setStats] = useState(null)
+  const [difficultyDone, setDifficultyDone] = useState(false)
+
+  // Timer
+  const startTimeRef = useRef(Date.now())
+  const [elapsed, setElapsed] = useState(0)
+  useEffect(() => {
+    const id = setInterval(() => setElapsed(Date.now() - startTimeRef.current), 1000)
+    return () => clearInterval(id)
+  }, [])
+
+  const question = questions[index]
+  const progress = (index / questions.length) * 100
+  const pct = Math.round(progress)
+
+  async function handleConfirm() {
+    if (selected === null) return
+    setAnswers(prev => [...prev, selected])
+    setRevealed(true)
+    const s = await getQuestionStats(question.id)
+    setStats(s)
+  }
+
+  async function handleDifficulty(difficulty) {
+    setDifficultyDone(true)
+    await submitFeedback(question.id, difficulty)
+    // Re-fetch stats to show updated distribution
+    const s = await getQuestionStats(question.id)
+    setStats(s)
+  }
+
+  function handleNext() {
+    if (index + 1 >= questions.length) {
+      navigate('/result', {
+        state: {
+          questions,
+          answers: [...answers],
+          elapsedMs: Date.now() - startTimeRef.current,
+        },
+      })
+    } else {
+      setIndex(i => i + 1)
+      setSelected(null)
+      setRevealed(false)
+      setStats(null)
+      setDifficultyDone(false)
+      // Scroll to top of content
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  }
+
+  if (!question) return null
+
+  return (
+    <div className="relative min-h-dvh bg-surface font-body flex flex-col">
+      {/* Fixed header */}
+      <header className="fixed top-0 left-0 right-0 z-30 px-5 py-3 bg-surface/90 backdrop-blur-md border-b border-surface-container-high">
+        <div className="max-w-md mx-auto flex flex-col gap-2">
+          <div className="flex justify-between items-end">
+            <span className="font-headline text-primary text-xl">
+              第 {index + 1} / {questions.length} 题
+            </span>
+            <span className="text-xs font-bold text-on-surface-variant opacity-60">
+              完成度 {pct}%
+            </span>
+          </div>
+          <div className="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
+            <div
+              className="h-full bg-primary rounded-full transition-all duration-500"
+              style={{ width: `${pct}%` }}
+            />
+          </div>
+        </div>
+      </header>
+
+      {/* Scrollable content */}
+      <main className={`flex-1 w-full max-w-md mx-auto px-4 pt-20 scrollbar-none ${revealed ? 'pb-[28rem]' : 'pb-52'}`}>
+        <QuestionCard
+          question={question}
+          selected={selected}
+          onSelect={revealed ? undefined : setSelected}
+        />
+      </main>
+
+      {/* Fixed footer */}
+      <footer className="fixed bottom-0 left-0 right-0 z-40 bg-gradient-to-t from-surface via-surface/95 to-transparent px-4 pt-4 pb-safe">
+        <div className="max-w-md mx-auto space-y-3">
+          {!revealed ? (
+            /* Before answering */
+            <button
+              onClick={handleConfirm}
+              disabled={selected === null}
+              className="dimensional-btn w-full bg-primary text-white font-headline text-xl py-4 rounded-xl border-b-4 border-primary-dim shadow-lg disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              确认选择
+            </button>
+          ) : (
+            /* After answering */
+            <RevealPanel
+              question={question}
+              userAnswer={answers[answers.length - 1]}
+              stats={stats}
+              onDifficulty={handleDifficulty}
+              onNext={handleNext}
+              difficultyDone={difficultyDone}
+            />
+          )}
+        </div>
+      </footer>
+    </div>
+  )
+}

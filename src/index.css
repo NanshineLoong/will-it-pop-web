@@ -1,0 +1,139 @@
+@import "tailwindcss";
+
+@theme {
+  /* Colors */
+  --color-primary: #2a6900;
+  --color-primary-dim: #235b00;
+  --color-primary-container: #84fb42;
+  --color-primary-fixed: #84fb42;
+  --color-primary-fixed-dim: #76ec33;
+  --color-on-primary: #d5ffb9;
+  --color-on-primary-container: #245c00;
+  --color-on-primary-fixed: #1a4700;
+  --color-on-primary-fixed-variant: #296700;
+  --color-inverse-primary: #84fb42;
+
+  --color-secondary: #00628c;
+  --color-secondary-dim: #00557a;
+  --color-secondary-container: #a3d8ff;
+  --color-secondary-fixed: #a3d8ff;
+  --color-secondary-fixed-dim: #80ccff;
+  --color-on-secondary: #e9f4ff;
+  --color-on-secondary-container: #004c6e;
+  --color-on-secondary-fixed: #003852;
+  --color-on-secondary-fixed-variant: #00567c;
+
+  --color-tertiary: #884d00;
+  --color-tertiary-dim: #774300;
+  --color-tertiary-container: #ff9810;
+  --color-tertiary-fixed: #ff9810;
+  --color-tertiary-fixed-dim: #ed8b00;
+  --color-on-tertiary: #fff0e5;
+  --color-on-tertiary-container: #4b2800;
+  --color-on-tertiary-fixed: #281300;
+  --color-on-tertiary-fixed-variant: #573000;
+
+  --color-surface: #f6f6f6;
+  --color-surface-dim: #d3d5d5;
+  --color-surface-bright: #f6f6f6;
+  --color-surface-tint: #2a6900;
+  --color-surface-variant: #dbdddd;
+  --color-surface-container: #e7e8e8;
+  --color-surface-container-low: #f0f1f1;
+  --color-surface-container-high: #e1e3e3;
+  --color-surface-container-highest: #dbdddd;
+  --color-surface-container-lowest: #ffffff;
+  --color-on-surface: #2d2f2f;
+  --color-on-surface-variant: #5a5c5c;
+
+  --color-background: #f6f6f6;
+  --color-on-background: #2d2f2f;
+  --color-outline: #767777;
+  --color-outline-variant: #acadad;
+
+  --color-error: #b02500;
+  --color-error-dim: #b92902;
+  --color-error-container: #f95630;
+  --color-on-error: #ffefec;
+  --color-on-error-container: #520c00;
+
+  /* Border radius */
+  --radius-DEFAULT: 1.25rem;
+  --radius-lg: 2.5rem;
+  --radius-xl: 4rem;
+
+  /* Fonts */
+  --font-headline: "ZCOOL KuaiLe", "Plus Jakarta Sans", system-ui;
+  --font-brush: "Ma Shan Zheng", cursive;
+  --font-body: "Plus Jakarta Sans", system-ui;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-body);
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-surface);
+    color: var(--color-on-surface);
+    min-height: 100dvh;
+    overscroll-behavior: none;
+  }
+}
+
+@layer components {
+  .dimensional-btn {
+    transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.1s;
+  }
+  .dimensional-btn:active {
+    transform: translateY(4px) scale(0.99);
+    box-shadow: none !important;
+  }
+
+  .sticker-shadow {
+    box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 0.08);
+  }
+
+  .tilt-left {
+    transform: rotate(-1.5deg);
+  }
+  .tilt-right {
+    transform: rotate(1.5deg);
+  }
+
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    font-family: 'Material Symbols Outlined';
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .icon-filled {
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+}
+
+@layer utilities {
+  .pb-safe {
+    padding-bottom: max(env(safe-area-inset-bottom, 0px), 1.5rem);
+  }
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  .min-h-dvh {
+    min-height: 100dvh;
+  }
+}
