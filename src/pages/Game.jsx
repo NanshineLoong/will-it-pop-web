@@ -93,11 +93,7 @@ export default function Game() {
 
       {/* Scrollable content */}
       <main className={`flex-1 w-full max-w-md mx-auto px-4 pt-20 scrollbar-none ${revealed ? 'pb-[28rem]' : 'pb-52'}`}>
-        <QuestionCard
-          question={question}
-          selected={selected}
-          onSelect={revealed ? undefined : setSelected}
-        />
+        <QuestionCard question={question} />
       </main>
 
       {/* Fixed footer */}
@@ -105,13 +101,41 @@ export default function Game() {
         <div className="max-w-md mx-auto space-y-3">
           {!revealed ? (
             /* Before answering */
-            <button
-              onClick={handleConfirm}
-              disabled={selected === null}
-              className="dimensional-btn w-full bg-primary text-white font-headline text-xl py-4 rounded-xl border-b-4 border-primary-dim shadow-lg disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              确认选择
-            </button>
+            <div className="flex flex-col gap-3">
+              <div className="grid grid-cols-2 gap-4">
+                <button
+                  onClick={() => setSelected(true)}
+                  className={[
+                    'dimensional-btn py-4 rounded-lg border-b-4 flex flex-col items-center justify-center gap-1 transition-colors',
+                    selected === true
+                      ? 'bg-primary-container border-primary-dim text-on-primary-container'
+                      : 'bg-white border-surface-container-highest text-primary'
+                  ].join(' ')}
+                >
+                  <span className="material-symbols-outlined icon-filled text-4xl">local_fire_department</span>
+                  <span className="font-headline text-lg">会火</span>
+                </button>
+                <button
+                  onClick={() => setSelected(false)}
+                  className={[
+                    'dimensional-btn py-4 rounded-lg border-b-4 flex flex-col items-center justify-center gap-1 transition-colors',
+                    selected === false
+                      ? 'bg-error-container/20 border-error text-error'
+                      : 'bg-white border-surface-container-highest text-outline'
+                  ].join(' ')}
+                >
+                  <span className="material-symbols-outlined text-4xl">block</span>
+                  <span className="font-headline text-lg text-on-surface-variant">不会火</span>
+                </button>
+              </div>
+              <button
+                onClick={handleConfirm}
+                disabled={selected === null}
+                className="dimensional-btn w-full bg-primary text-white font-headline text-xl py-4 rounded-xl border-b-4 border-primary-dim shadow-lg disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                确认选择
+              </button>
+            </div>
           ) : (
             /* After answering */
             <RevealPanel
