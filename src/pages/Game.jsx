@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import questionsData from '../data/questions.json'
 import { sampleQuestions } from '../lib/game'
-import { submitFeedback, getQuestionStats } from '../lib/api'
+import { submitFeedback } from '../lib/api'
 import QuestionCard from '../components/QuestionCard'
 import RevealPanel from '../components/RevealPanel'
 
@@ -16,7 +16,6 @@ export default function Game() {
   const [answers, setAnswers] = useState([])
   const [selected, setSelected] = useState(null)   // null | true | false
   const [revealed, setRevealed] = useState(false)
-  const [stats, setStats] = useState(null)
   const [difficultyDone, setDifficultyDone] = useState(false)
 
   // Timer
@@ -31,20 +30,15 @@ export default function Game() {
   const progress = (index / questions.length) * 100
   const pct = Math.round(progress)
 
-  async function handleConfirm() {
+  function handleConfirm() {
     if (selected === null) return
     setAnswers(prev => [...prev, selected])
     setRevealed(true)
-    const s = await getQuestionStats(question.id)
-    setStats(s)
   }
 
   async function handleDifficulty(difficulty) {
     setDifficultyDone(true)
     await submitFeedback(question.id, difficulty)
-    // Re-fetch stats to show updated distribution
-    const s = await getQuestionStats(question.id)
-    setStats(s)
   }
 
   function handleNext() {
@@ -60,7 +54,6 @@ export default function Game() {
       setIndex(i => i + 1)
       setSelected(null)
       setRevealed(false)
-      setStats(null)
       setDifficultyDone(false)
       // Scroll to top of content
       window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -141,7 +134,6 @@ export default function Game() {
             <RevealPanel
               question={question}
               userAnswer={answers[answers.length - 1]}
-              stats={stats}
               onDifficulty={handleDifficulty}
               onNext={handleNext}
               difficultyDone={difficultyDone}

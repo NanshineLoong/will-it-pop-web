@@ -4,47 +4,52 @@ function formatNum(n) {
   return String(n)
 }
 
-export default function RevealPanel({ question, userAnswer, stats, onDifficulty, onNext, difficultyDone }) {
+export default function RevealPanel({ question, userAnswer, onDifficulty, onNext, difficultyDone }) {
   const correct = userAnswer === question.is_hot
+  const isHot = question.is_hot
 
   return (
     <div className="space-y-3">
       {/* Result card */}
-      <div className="bg-primary-container/30 border-4 border-primary rounded-lg p-5 space-y-4 sticker-shadow">
+      <div className={`border-4 rounded-lg p-5 space-y-4 sticker-shadow ${
+        isHot
+          ? 'bg-tertiary-container/30 border-tertiary'
+          : 'bg-secondary-container/30 border-secondary'
+      }`}>
         {/* Verdict + user prediction */}
         <div className="flex items-start justify-between">
           <div className="flex flex-col">
-            <span className="text-[10px] font-bold text-primary-dim opacity-70 uppercase tracking-wider">系统判定</span>
-            <span className="font-headline text-2xl text-primary-dim">
-              {question.is_hot ? '这篇会火！🔥' : '这篇没火 ❄️'}
+            <span className={`text-[10px] font-bold opacity-70 uppercase tracking-wider ${isHot ? 'text-tertiary-dim' : 'text-secondary-dim'}`}>系统判定</span>
+            <span className={`font-headline text-2xl ${isHot ? 'text-tertiary-dim' : 'text-secondary'}`}>
+              {isHot ? '这篇火了！🔥' : '这篇没火 ❄️'}
             </span>
           </div>
           <div className="text-right">
             <span className="text-[10px] font-bold text-on-surface-variant opacity-70 uppercase tracking-wider">你的预测</span>
-            <span className={`block font-headline text-lg ${correct ? 'text-secondary' : 'text-error'}`}>
+            <span className={`block font-headline text-lg ${correct ? 'text-primary-dim' : 'text-error'}`}>
               {correct ? '非常准确 ✓' : '判断失误 ✗'}
             </span>
           </div>
         </div>
 
         {/* Interaction stats */}
-        <div className="grid grid-cols-3 gap-2 py-3 border-y border-primary/20">
+        <div className={`grid grid-cols-3 gap-2 py-3 border-y ${isHot ? 'border-tertiary/20' : 'border-secondary/20'}`}>
           <div className="text-center">
-            <div className="flex items-center justify-center gap-1 text-primary-dim">
+            <div className={`flex items-center justify-center gap-1 ${isHot ? 'text-tertiary-dim' : 'text-secondary'}`}>
               <span className="material-symbols-outlined icon-filled text-base">favorite</span>
               <span className="font-headline text-base">{formatNum(question.likes)}</span>
             </div>
             <span className="text-[10px] text-on-surface-variant">点赞数</span>
           </div>
           <div className="text-center">
-            <div className="flex items-center justify-center gap-1 text-primary-dim">
+            <div className={`flex items-center justify-center gap-1 ${isHot ? 'text-tertiary-dim' : 'text-secondary'}`}>
               <span className="material-symbols-outlined icon-filled text-base">star</span>
               <span className="font-headline text-base">{formatNum(question.collects)}</span>
             </div>
             <span className="text-[10px] text-on-surface-variant">收藏数</span>
           </div>
           <div className="text-center">
-            <div className="flex items-center justify-center gap-1 text-primary-dim">
+            <div className={`flex items-center justify-center gap-1 ${isHot ? 'text-tertiary-dim' : 'text-secondary'}`}>
               <span className="material-symbols-outlined icon-filled text-base">share</span>
               <span className="font-headline text-base">{formatNum(question.shares)}</span>
             </div>
@@ -92,15 +97,10 @@ export default function RevealPanel({ question, userAnswer, stats, onDifficulty,
         </div>
       )}
 
-      {/* Difficulty distribution (shown after voting) */}
-      {difficultyDone && stats && (
-        <div className="bg-surface-container-low rounded-xl p-3 text-center space-y-1">
-          <p className="text-xs text-on-surface-variant font-medium">大家觉得这题</p>
-          <div className="flex justify-around text-xs">
-            <span className="text-on-surface-variant">太难 <strong className="text-primary">{stats.too_hard}</strong></span>
-            <span className="text-on-surface-variant">刚好 <strong className="text-primary">{stats.just_right}</strong></span>
-            <span className="text-on-surface-variant">太简单 <strong className="text-primary">{stats.too_easy}</strong></span>
-          </div>
+      {/* Thank you message (shown after voting) */}
+      {difficultyDone && (
+        <div className="bg-surface-container-low rounded-xl p-3 text-center">
+          <p className="text-sm text-on-surface-variant font-medium">谢谢您的反馈 🙏</p>
         </div>
       )}
 
