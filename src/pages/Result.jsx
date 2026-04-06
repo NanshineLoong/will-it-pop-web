@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import html2canvas from 'html2canvas'
+import { toPng } from 'html-to-image'
 import { calcScore, getPersonalityLabel } from '../lib/scoring'
 import ShareImage from '../components/ShareImage'
 
@@ -23,15 +23,13 @@ export default function Result() {
 
   async function handleSave() {
     const el = document.getElementById('share-image')
-    const canvas = await html2canvas(el, {
-      useCORS: false,
-      allowTaint: false,
-      scale: 2,
+    const dataUrl = await toPng(el, {
+      pixelRatio: 2,
       backgroundColor: '#ffffff',
     })
     const link = document.createElement('a')
     link.download = 'will-it-pop-result.png'
-    link.href = canvas.toDataURL()
+    link.href = dataUrl
     link.click()
   }
 
