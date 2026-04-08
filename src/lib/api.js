@@ -1,6 +1,6 @@
 const BASE_PATH = '/api'
 
-export async function submitFeedback(questionId, difficulty) {
+export async function submitFeedback(noteId, difficulty) {
   try {
     const response = await fetch(`${BASE_PATH}/feedback`, {
       method: 'POST',
@@ -8,7 +8,7 @@ export async function submitFeedback(questionId, difficulty) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        question_id: questionId,
+        note_id: noteId,
         difficulty,
       }),
     })
@@ -24,9 +24,9 @@ export async function submitFeedback(questionId, difficulty) {
   }
 }
 
-export async function getQuestionStats(questionId) {
+export async function getNoteStats(noteId) {
   try {
-    const response = await fetch(`${BASE_PATH}/questions/${questionId}/stats`)
+    const response = await fetch(`${BASE_PATH}/notes/${noteId}/stats`)
 
     if (!response.ok) {
       return null

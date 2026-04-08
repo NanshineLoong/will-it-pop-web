@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { getQuestionStats, submitFeedback, submitNote } from './api'
+import { getNoteStats, submitFeedback, submitNote } from './api'
 
 beforeEach(() => {
   vi.restoreAllMocks()
@@ -29,7 +29,7 @@ describe('submitFeedback', () => {
   })
 })
 
-describe('getQuestionStats', () => {
+describe('getNoteStats', () => {
   it('returns stats object on success', async () => {
     const mockStats = { too_hard: 5, just_right: 10, too_easy: 2, total: 17 }
 
@@ -41,14 +41,14 @@ describe('getQuestionStats', () => {
       }),
     )
 
-    const result = await getQuestionStats('q1')
+    const result = await getNoteStats('n1')
     expect(result).toEqual(mockStats)
   })
 
   it('returns null on failure (silent)', async () => {
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('fail')))
 
-    const result = await getQuestionStats('q1')
+    const result = await getNoteStats('n1')
     expect(result).toBeNull()
   })
 })

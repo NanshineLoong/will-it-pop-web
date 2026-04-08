@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import NoteSubmitForm from '../components/NoteSubmitForm'
-import questionsData from '../data/questions.json'
+import notesData from '../data/xhs_collection/final_notes.json'
 
 export default function Home() {
   const navigate = useNavigate()
-  const total = questionsData.questions.length
+  const total = notesData.notes.length
   const [showRules, setShowRules] = useState(false)
   const [showUpload, setShowUpload] = useState(false)
 
@@ -67,7 +67,7 @@ export default function Home() {
 
           <button
             onClick={() => startGame(100)}
-            disabled={total < 20}
+            disabled={total < 100}
             className="dimensional-btn w-full h-24 bg-tertiary-container text-on-tertiary-container rounded-lg border-b-8 border-tertiary-dim flex items-center justify-between px-8 shadow-xl tilt-right sticker-shadow disabled:opacity-50"
           >
             <div className="text-left">

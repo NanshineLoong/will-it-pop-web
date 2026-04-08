@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { toPng } from 'html-to-image'
 import { calcScore, getPersonalityLabel } from '../lib/scoring'
+import { isHotNote } from '../lib/notes'
 import ShareImage from '../components/ShareImage'
 
 export default function Result() {
@@ -15,8 +16,8 @@ export default function Result() {
 
   if (!state) return null
 
-  const { questions, answers, elapsedMs = 0 } = state
-  const correctAnswers = questions.map(q => q.is_hot)
+  const { notes, answers, elapsedMs = 0 } = state
+  const correctAnswers = notes.map(isHotNote)
   const { correct, total, accuracy } = calcScore(answers, correctAnswers)
   const score = Math.round(accuracy * 100)
   const label = getPersonalityLabel(accuracy)

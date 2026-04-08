@@ -1,12 +1,15 @@
+import { isHotNote } from '../lib/notes'
+
 function formatNum(n) {
-  if (n >= 10000) return (n / 10000).toFixed(1) + 'w'
-  if (n >= 1000) return (n / 1000).toFixed(1) + 'k'
-  return String(n)
+  const value = Number(n) || 0
+  if (value >= 10000) return (value / 10000).toFixed(1) + 'w'
+  if (value >= 1000) return (value / 1000).toFixed(1) + 'k'
+  return String(value)
 }
 
-export default function RevealPanel({ question, userAnswer, onDifficulty, onNext, difficultyDone }) {
-  const correct = userAnswer === question.is_hot
-  const isHot = question.is_hot
+export default function RevealPanel({ note, userAnswer, onDifficulty, onNext, difficultyDone }) {
+  const isHot = isHotNote(note)
+  const correct = userAnswer === isHot
 
   return (
     <div className="space-y-3">
@@ -33,33 +36,40 @@ export default function RevealPanel({ question, userAnswer, onDifficulty, onNext
         </div>
 
         {/* Interaction stats */}
-        <div className={`grid grid-cols-3 gap-2 py-3 border-y ${isHot ? 'border-tertiary/20' : 'border-secondary/20'}`}>
+        <div className={`grid grid-cols-4 gap-2 py-3 border-y ${isHot ? 'border-tertiary/20' : 'border-secondary/20'}`}>
           <div className="text-center">
             <div className={`flex items-center justify-center gap-1 ${isHot ? 'text-tertiary-dim' : 'text-secondary'}`}>
               <span className="material-symbols-outlined icon-filled text-base">favorite</span>
-              <span className="font-headline text-base">{formatNum(question.likes)}</span>
+              <span className="font-headline text-base">{formatNum(note.likes)}</span>
             </div>
             <span className="text-[10px] text-on-surface-variant">点赞数</span>
           </div>
           <div className="text-center">
             <div className={`flex items-center justify-center gap-1 ${isHot ? 'text-tertiary-dim' : 'text-secondary'}`}>
               <span className="material-symbols-outlined icon-filled text-base">star</span>
-              <span className="font-headline text-base">{formatNum(question.collects)}</span>
+              <span className="font-headline text-base">{formatNum(note.collects)}</span>
             </div>
             <span className="text-[10px] text-on-surface-variant">收藏数</span>
           </div>
           <div className="text-center">
             <div className={`flex items-center justify-center gap-1 ${isHot ? 'text-tertiary-dim' : 'text-secondary'}`}>
               <span className="material-symbols-outlined icon-filled text-base">share</span>
-              <span className="font-headline text-base">{formatNum(question.shares)}</span>
+              <span className="font-headline text-base">{formatNum(note.shares)}</span>
             </div>
             <span className="text-[10px] text-on-surface-variant">分享数</span>
+          </div>
+          <div className="text-center">
+            <div className={`flex items-center justify-center gap-1 ${isHot ? 'text-tertiary-dim' : 'text-secondary'}`}>
+              <span className="material-symbols-outlined icon-filled text-base">chat_bubble</span>
+              <span className="font-headline text-base">{formatNum(note.comments)}</span>
+            </div>
+            <span className="text-[10px] text-on-surface-variant">评论数</span>
           </div>
         </div>
 
         {/* Source link */}
         <a
-          href={question.source_url}
+          href={note.note_url}
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center justify-center gap-2 w-full py-2.5 bg-white text-secondary font-headline rounded-full border-2 border-secondary-container text-sm"

@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import questionsData from '../data/questions.json'
-import { sampleQuestions } from '../lib/game'
+import notesData from '../data/xhs_collection/final_notes.json'
+import { sampleNotes } from '../lib/game'
 import { submitFeedback } from '../lib/api'
-import QuestionCard from '../components/QuestionCard'
+import NoteCard from '../components/NoteCard'
 import RevealPanel from '../components/RevealPanel'
 
 export default function Game() {
@@ -11,7 +11,7 @@ export default function Game() {
   const navigate = useNavigate()
   const count = state?.count ?? 10
 
-  const [questions] = useState(() => sampleQuestions(questionsData.questions, count))
+  const [notes] = useState(() => sampleNotes(notesData.notes, count))
   const [index, setIndex] = useState(0)
   const [answers, setAnswers] = useState([])
   const [selected, setSelected] = useState(null)   // null | true | false
@@ -26,8 +26,8 @@ export default function Game() {
     return () => clearInterval(id)
   }, [])
 
-  const question = questions[index]
-  const progress = (index / questions.length) * 100
+  const note = notes[index]
+  const progress = (index / notes.length) * 100
   const pct = Math.round(progress)
 
   function handleConfirm() {
@@ -38,14 +38,14 @@ export default function Game() {
 
   async function handleDifficulty(difficulty) {
     setDifficultyDone(true)
-    await submitFeedback(question.id, difficulty)
+    await submitFeedback(note.note_id, difficulty)
   }
 
   function handleNext() {
-    if (index + 1 >= questions.length) {
+    if (index + 1 >= notes.length) {
       navigate('/result', {
         state: {
-          questions,
+          notes,
           answers: [...answers],
           elapsedMs: Date.now() - startTimeRef.current,
         },
@@ -60,7 +60,7 @@ export default function Game() {
     }
   }
 
-  if (!question) return null
+  if (!note) return null
 
   return (
     <div className="relative min-h-dvh bg-surface font-body flex flex-col">
@@ -69,7 +69,7 @@ export default function Game() {
         <div className="max-w-md mx-auto flex flex-col gap-2">
           <div className="flex justify-between items-end">
             <span className="font-headline text-primary text-xl">
-              第 {index + 1} / {questions.length} 题
+              第 {index + 1} / {notes.length} 题
             </span>
             <span className="text-xs font-bold text-on-surface-variant opacity-60">
               完成度 {pct}%
@@ -86,7 +86,7 @@ export default function Game() {
 
       {/* Scrollable content */}
       <main className={`flex-1 w-full max-w-md mx-auto px-4 pt-20 scrollbar-none ${revealed ? 'pb-[28rem]' : 'pb-52'}`}>
-        <QuestionCard question={question} />
+        <NoteCard note={note} />
       </main>
 
       {/* Fixed footer */}
@@ -132,7 +132,7 @@ export default function Game() {
           ) : (
             /* After answering */
             <RevealPanel
-              question={question}
+              note={note}
               userAnswer={answers[answers.length - 1]}
               onDifficulty={handleDifficulty}
               onNext={handleNext}

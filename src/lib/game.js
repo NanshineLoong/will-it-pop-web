@@ -10,12 +10,12 @@ function shuffle(items) {
 }
 
 /**
- * Returns a balanced hot/cold sample when possible.
+ * Returns a balanced hot/cold note sample when possible.
  * If one side runs short, fills from the other side instead.
  */
-export function sampleQuestions(questions, count) {
-  const hot = shuffle(questions.filter((question) => question.is_hot))
-  const cold = shuffle(questions.filter((question) => !question.is_hot))
+export function sampleNotes(notes, count) {
+  const hot = shuffle(notes.filter((note) => note.bucket === 'hot'))
+  const cold = shuffle(notes.filter((note) => note.bucket !== 'hot'))
   const total = hot.length + cold.length
 
   if (total <= count) {

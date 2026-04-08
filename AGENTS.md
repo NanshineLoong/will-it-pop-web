@@ -4,9 +4,9 @@
 This is a Vite + React frontend. Keep application code in `src/` and treat `dist/` as generated output.
 
 - `src/pages/`: route-level screens such as `Home.jsx`, `Game.jsx`, and `Result.jsx`
-- `src/components/`: reusable UI pieces such as `QuestionCard.jsx` and `NoteSubmitForm.jsx`
+- `src/components/`: reusable UI pieces such as `NoteCard.jsx` and `NoteSubmitForm.jsx`
 - `src/lib/`: non-UI logic and API helpers, for example `game.js`, `scoring.js`, and `api.js`
-- `src/data/`: static data like `questions.json`
+- `src/data/xhs_collection/`: static note data, including `final_notes.json` and local note images
 - `public/`: static assets and fonts served as-is
 
 Co-locate tests with the code they cover using `*.test.js` or `*.test.jsx`.
@@ -34,7 +34,7 @@ Tests use Vitest with `jsdom`, React Testing Library, and `@testing-library/jest
 - Name tests `*.test.js` or `*.test.jsx`
 - Prefer behavior-focused tests over implementation details
 - Mock network boundaries in `src/lib/api.js` tests rather than hitting a live backend
-- Add or update tests when changing scoring, question sampling, API flows, or interactive UI states
+- Add or update tests when changing scoring, note sampling, API flows, or interactive UI states
 
 ## Commit & Pull Request Guidelines
 Recent history follows Conventional Commits: `feat:`, `fix:`, `refactor:`, and `chore:`. Keep subjects short and imperative, for example: `fix: proxy api requests in dev`.
