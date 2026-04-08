@@ -16,8 +16,8 @@ export default function RevealPanel({ note, userAnswer, onDifficulty, onNext, di
       {/* Result card */}
       <div className={`border-4 rounded-lg p-5 space-y-4 sticker-shadow ${
         isHot
-          ? 'bg-tertiary-container/30 border-tertiary'
-          : 'bg-secondary-container/30 border-secondary'
+          ? 'bg-tertiary-container/95 border-tertiary'
+          : 'bg-secondary-container/95 border-secondary'
       }`}>
         {/* Verdict + user prediction */}
         <div className="flex items-start justify-between">
