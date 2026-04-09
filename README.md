@@ -1,15 +1,18 @@
-
 <div align="center">
-# 这篇会火吗？
 
-![首页截图](./docs/screenshots/home.png)
-![结果截图](./docs/screenshots/result.png)
-<p>
-  <img src="./docs/screenshots/home.png" alt="首页截图" width="420" />
-  &nbsp;&nbsp;
-  <img src="./docs/screenshots/result.png" alt="结果截图" width="420" />
-</p>
-仅供娱乐
+<h2 align="center">这篇会火吗？</h2>
+
+<table>
+  <tr>
+    <td><img src="./docs/screenshots/home.png" alt="首页截图" width="420" /></td>
+    <td><img src="./docs/screenshots/result.png" alt="结果截图" width="420" /></td>
+  </tr>
+</table>
+
+<p><a href="https://will-it-pop.online/">开始游戏</a></p>
+
+<p><em>仅供娱乐</em></p>
+
 </div>
 
 
