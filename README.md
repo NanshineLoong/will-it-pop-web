@@ -1,11 +1,16 @@
 
-
+<div align="center">
 # 这篇会火吗？
 
-  
-
-仅供娱乐~
-
+![首页截图](./docs/screenshots/home.png)
+![结果截图](./docs/screenshots/result.png)
+<p>
+  <img src="./docs/screenshots/home.png" alt="首页截图" width="420" />
+  &nbsp;&nbsp;
+  <img src="./docs/screenshots/result.png" alt="结果截图" width="420" />
+</p>
+仅供娱乐
+</div>
 
 
 ## 规则
