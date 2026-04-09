@@ -1,5 +1,6 @@
 import { forwardRef } from 'react'
 import AppIcon from './AppIcon'
+import qrCode from '../assets/qr/will-it-pop-online-qr.svg'
 
 const personalityDesc = {
   '爆款雷达型选手': '你对流量有着天然的嗅觉，总能在平凡的文字中精准锁定那抹爆款的基因。下一个顶流推手就是你！',
@@ -72,13 +73,14 @@ const ShareImage = forwardRef(function ShareImage({ score, correct, total, label
           </div>
         </div>
 
-        {/* QR code placeholder */}
+        {/* QR code */}
         <div className="flex flex-col items-center gap-2 pt-1">
           <div className="bg-surface-container-low p-3 rounded-2xl border border-surface-container-high/30">
-            {/* QR code will be injected here once user provides it */}
-            <div className="w-24 h-24 flex items-center justify-center text-outline-variant text-xs">
-              <AppIcon name="qr" className="h-12 w-12 opacity-30" strokeWidth={1.75} />
-            </div>
+            <img
+              src={qrCode}
+              alt="Will It Pop 官网二维码"
+              className="block w-24 h-24"
+            />
           </div>
           <p className="text-on-surface-variant/60 text-xs font-bold tracking-wider">扫描二维码进入网址</p>
         </div>
