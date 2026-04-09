@@ -1,5 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { getNoteStats, submitFeedback, submitNote } from './api'
+import {
+  getNoteStats,
+  submitFeedback,
+  submitNote,
+  submitQuizAnswer,
+  submitQuizComplete,
+} from './api'
 
 beforeEach(() => {
   vi.restoreAllMocks()
@@ -71,6 +77,108 @@ describe('submitNote', () => {
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('fail')))
 
     const result = await submitNote('https://www.xiaohongshu.com/x')
+    expect(result).toBe(false)
+  })
+})
+
+describe('submitQuizAnswer', () => {
+  it('posts quiz answers to the answer endpoint', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: true,
+      }),
+    )
+
+    const result = await submitQuizAnswer({
+      sessionId: 's1',
+      questionCount: 10,
+      questionIndex: 0,
+      noteId: 'n1',
+      userAnswer: true,
+      correctAnswer: false,
+    })
+
+    expect(fetch).toHaveBeenCalledWith('/api/quiz/answers', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        session_id: 's1',
+        question_count: 10,
+        question_index: 0,
+        note_id: 'n1',
+        user_answer: true,
+        correct_answer: false,
+      }),
+    })
+    expect(result).toBe(true)
+  })
+
+  it('returns false on answer write failure', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('fail')))
+
+    const result = await submitQuizAnswer({
+      sessionId: 's1',
+      questionCount: 10,
+      questionIndex: 0,
+      noteId: 'n1',
+      userAnswer: true,
+      correctAnswer: false,
+    })
+
+    expect(result).toBe(false)
+  })
+})
+
+describe('submitQuizComplete', () => {
+  it('posts quiz completion to the completion endpoint', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: true,
+      }),
+    )
+
+    const result = await submitQuizComplete({
+      sessionId: 's1',
+      questionCount: 10,
+      answeredCount: 8,
+      correctCount: 6,
+      score: 75,
+      elapsedMs: 12345,
+    })
+
+    expect(fetch).toHaveBeenCalledWith('/api/quiz/complete', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        session_id: 's1',
+        question_count: 10,
+        answered_count: 8,
+        correct_count: 6,
+        score: 75,
+        elapsed_ms: 12345,
+      }),
+    })
+    expect(result).toBe(true)
+  })
+
+  it('returns false on completion write failure', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('fail')))
+
+    const result = await submitQuizComplete({
+      sessionId: 's1',
+      questionCount: 10,
+      answeredCount: 8,
+      correctCount: 6,
+      score: 75,
+      elapsedMs: 12345,
+    })
+
     expect(result).toBe(false)
   })
 })

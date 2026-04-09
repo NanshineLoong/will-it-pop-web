@@ -53,3 +53,63 @@ export async function submitNote(url) {
     return false
   }
 }
+
+export async function submitQuizAnswer({
+  sessionId,
+  questionCount,
+  questionIndex,
+  noteId,
+  userAnswer,
+  correctAnswer,
+}) {
+  try {
+    const response = await fetch(`${BASE_PATH}/quiz/answers`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        session_id: sessionId,
+        question_count: questionCount,
+        question_index: questionIndex,
+        note_id: noteId,
+        user_answer: userAnswer,
+        correct_answer: correctAnswer,
+      }),
+    })
+
+    return response.ok
+  } catch {
+    return false
+  }
+}
+
+export async function submitQuizComplete({
+  sessionId,
+  questionCount,
+  answeredCount,
+  correctCount,
+  score,
+  elapsedMs,
+}) {
+  try {
+    const response = await fetch(`${BASE_PATH}/quiz/complete`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        session_id: sessionId,
+        question_count: questionCount,
+        answered_count: answeredCount,
+        correct_count: correctCount,
+        score,
+        elapsed_ms: elapsedMs,
+      }),
+    })
+
+    return response.ok
+  } catch {
+    return false
+  }
+}

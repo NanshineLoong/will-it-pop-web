@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { toPng } from 'html-to-image'
+import { submitQuizComplete } from '../lib/api'
 import { calcScore, getPersonalityLabel } from '../lib/scoring'
 import { isHotNote } from '../lib/notes'
 import AppIcon from '../components/AppIcon'
@@ -10,18 +11,39 @@ export default function Result() {
   const { state } = useLocation()
   const navigate = useNavigate()
   const shareRef = useRef(null)
+  const completionSubmittedRef = useRef(false)
 
   useEffect(() => {
     if (!state) navigate('/')
   }, [state, navigate])
-
-  if (!state) return null
-
-  const { notes, answers, elapsedMs = 0 } = state
+  const notes = state?.notes ?? []
+  const answers = state?.answers ?? []
+  const elapsedMs = state?.elapsedMs ?? 0
+  const sessionId = state?.sessionId
   const correctAnswers = notes.map(isHotNote)
   const { correct, total, accuracy } = calcScore(answers, correctAnswers)
   const score = Math.round(accuracy * 100)
   const label = getPersonalityLabel(accuracy)
+
+  useEffect(() => {
+    if (!state || !sessionId || completionSubmittedRef.current) return
+
+    completionSubmittedRef.current = true
+    void submitQuizComplete({
+      sessionId,
+      questionCount: notes.length,
+      answeredCount: total,
+      correctCount: correct,
+      score,
+      elapsedMs,
+    }).then((ok) => {
+      if (!ok) {
+        console.error('Failed to persist quiz completion')
+      }
+    })
+  }, [correct, elapsedMs, notes.length, score, sessionId, state, total])
+
+  if (!state) return null
 
   async function handleSave() {
     const el = document.getElementById('share-image')

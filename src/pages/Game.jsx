@@ -2,10 +2,16 @@ import { useState, useRef, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import notesData from '../data/xhs_collection/final_notes.json'
 import { sampleNotes } from '../lib/game'
-import { submitFeedback } from '../lib/api'
+import { submitFeedback, submitQuizAnswer } from '../lib/api'
+import { isHotNote } from '../lib/notes'
 import AppIcon from '../components/AppIcon'
 import NoteCard from '../components/NoteCard'
 import RevealPanel from '../components/RevealPanel'
+
+function createSessionId() {
+  return globalThis.crypto?.randomUUID?.()
+    ?? `session-${Date.now()}-${Math.random().toString(36).slice(2)}`
+}
 
 export default function Game() {
   const { state } = useLocation()
@@ -21,6 +27,7 @@ export default function Game() {
 
   // Timer
   const startTimeRef = useRef(Date.now())
+  const sessionIdRef = useRef(createSessionId())
   const [elapsed, setElapsed] = useState(0)
   useEffect(() => {
     const id = setInterval(() => setElapsed(Date.now() - startTimeRef.current), 1000)
@@ -33,6 +40,20 @@ export default function Game() {
 
   function handleConfirm() {
     if (selected === null) return
+
+    void submitQuizAnswer({
+      sessionId: sessionIdRef.current,
+      questionCount: notes.length,
+      questionIndex: index,
+      noteId: note.note_id,
+      userAnswer: selected,
+      correctAnswer: isHotNote(note),
+    }).then((ok) => {
+      if (!ok) {
+        console.error('Failed to persist quiz answer')
+      }
+    })
+
     setAnswers(prev => [...prev, selected])
     setRevealed(true)
   }
@@ -49,6 +70,7 @@ export default function Game() {
           notes,
           answers: [...answers],
           elapsedMs: Date.now() - startTimeRef.current,
+          sessionId: sessionIdRef.current,
         },
       })
     } else {
