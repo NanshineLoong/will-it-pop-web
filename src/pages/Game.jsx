@@ -1,52 +1,66 @@
-import { useState, useRef, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import notesData from '../data/xhs_collection/final_notes.json'
 import { sampleNotes } from '../lib/game'
-import { submitFeedback, submitQuizAnswer } from '../lib/api'
+import {
+  createGameSession,
+  getPlayingSessionElapsedMs,
+  isFinishedGameSession,
+  loadStoredGameSession,
+  markGameSessionFinished,
+  saveStoredGameSession,
+} from '../lib/gameSession'
+import { calcScore } from '../lib/scoring'
+import { submitFeedback, submitQuizAnswer, submitQuizComplete } from '../lib/api'
 import { isHotNote } from '../lib/notes'
 import AppIcon from '../components/AppIcon'
 import NoteCard from '../components/NoteCard'
 import RevealPanel from '../components/RevealPanel'
-
-function createSessionId() {
-  return globalThis.crypto?.randomUUID?.()
-    ?? `session-${Date.now()}-${Math.random().toString(36).slice(2)}`
-}
 
 export default function Game() {
   const { state } = useLocation()
   const navigate = useNavigate()
   const count = state?.count ?? 10
 
-  const [notes] = useState(() => sampleNotes(notesData.notes, count))
-  const [index, setIndex] = useState(0)
-  const [answers, setAnswers] = useState([])
-  const [selected, setSelected] = useState(null)   // null | true | false
-  const [revealed, setRevealed] = useState(false)
-  const [difficultyDone, setDifficultyDone] = useState(false)
+  const [session, setSession] = useState(() => {
+    const storedSession = loadStoredGameSession()
 
-  // Timer
-  const startTimeRef = useRef(Date.now())
-  const sessionIdRef = useRef(createSessionId())
-  const [elapsed, setElapsed] = useState(0)
+    if (storedSession) {
+      return storedSession
+    }
+
+    const freshSession = createGameSession(sampleNotes(notesData.notes, count), count)
+    saveStoredGameSession(freshSession)
+    return freshSession
+  })
+
   useEffect(() => {
-    const id = setInterval(() => setElapsed(Date.now() - startTimeRef.current), 1000)
-    return () => clearInterval(id)
-  }, [])
+    if (isFinishedGameSession(session)) {
+      navigate('/result', { replace: true })
+    }
+  }, [navigate, session])
 
-  const note = notes[index]
-  const progress = (index / notes.length) * 100
+  function updateSession(updater) {
+    setSession((previousSession) => {
+      const nextSession = updater(previousSession)
+      saveStoredGameSession(nextSession)
+      return nextSession
+    })
+  }
+
+  const note = session.notes[session.index]
+  const progress = (session.index / session.notes.length) * 100
   const pct = Math.round(progress)
 
   function handleConfirm() {
-    if (selected === null) return
+    if (session.selected === null) return
 
     void submitQuizAnswer({
-      sessionId: sessionIdRef.current,
-      questionCount: notes.length,
-      questionIndex: index,
+      sessionId: session.sessionId,
+      questionCount: session.notes.length,
+      questionIndex: session.index,
       noteId: note.note_id,
-      userAnswer: selected,
+      userAnswer: session.selected,
       correctAnswer: isHotNote(note),
     }).then((ok) => {
       if (!ok) {
@@ -54,35 +68,57 @@ export default function Game() {
       }
     })
 
-    setAnswers(prev => [...prev, selected])
-    setRevealed(true)
+    updateSession((previousSession) => ({
+      ...previousSession,
+      answers: [...previousSession.answers, previousSession.selected],
+      revealed: true,
+    }))
   }
 
   async function handleDifficulty(difficulty) {
-    setDifficultyDone(true)
+    updateSession((previousSession) => ({
+      ...previousSession,
+      difficultyDone: true,
+    }))
     await submitFeedback(note.note_id, difficulty)
   }
 
   function handleNext() {
-    if (index + 1 >= notes.length) {
-      navigate('/result', {
-        state: {
-          notes,
-          answers: [...answers],
-          elapsedMs: Date.now() - startTimeRef.current,
-          sessionId: sessionIdRef.current,
-        },
+    if (session.index + 1 >= session.notes.length) {
+      const elapsedMs = getPlayingSessionElapsedMs(session)
+      const finishedSession = markGameSessionFinished(session, elapsedMs)
+      const correctAnswers = finishedSession.notes.map(isHotNote)
+      const { correct, total, accuracy } = calcScore(finishedSession.answers, correctAnswers)
+
+      saveStoredGameSession(finishedSession)
+      void submitQuizComplete({
+        sessionId: finishedSession.sessionId,
+        questionCount: finishedSession.notes.length,
+        answeredCount: total,
+        correctCount: correct,
+        score: Math.round(accuracy * 100),
+        elapsedMs,
+      }).then((ok) => {
+        if (!ok) {
+          console.error('Failed to persist quiz completion')
+        }
       })
+
+      navigate('/result')
     } else {
-      setIndex(i => i + 1)
-      setSelected(null)
-      setRevealed(false)
-      setDifficultyDone(false)
+      updateSession((previousSession) => ({
+        ...previousSession,
+        index: previousSession.index + 1,
+        selected: null,
+        revealed: false,
+        difficultyDone: false,
+      }))
       // Scroll to top of content
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }
 
+  if (isFinishedGameSession(session)) return null
   if (!note) return null
 
   return (
@@ -92,7 +128,7 @@ export default function Game() {
         <div className="max-w-md mx-auto flex flex-col gap-2">
           <div className="flex justify-between items-end">
             <span className="font-headline text-primary text-xl">
-              第 {index + 1} / {notes.length} 题
+              第 {session.index + 1} / {session.notes.length} 题
             </span>
             <span className="text-xs font-bold text-on-surface-variant opacity-60">
               完成度 {pct}%
@@ -108,22 +144,22 @@ export default function Game() {
       </header>
 
       {/* Scrollable content */}
-      <main className={`flex-1 w-full max-w-md mx-auto px-4 pt-20 scrollbar-none ${revealed ? 'pb-[28rem]' : 'pb-52'}`}>
+      <main className={`flex-1 w-full max-w-md mx-auto px-4 pt-20 scrollbar-none ${session.revealed ? 'pb-[28rem]' : 'pb-52'}`}>
         <NoteCard note={note} />
       </main>
 
       {/* Fixed footer */}
       <footer className="fixed bottom-0 left-0 right-0 z-40 bg-gradient-to-t from-surface via-surface/95 to-transparent px-4 pt-4 pb-safe">
         <div className="max-w-md mx-auto space-y-3">
-          {!revealed ? (
+          {!session.revealed ? (
             /* Before answering */
             <div className="flex flex-col gap-3">
               <div className="grid grid-cols-2 gap-4">
                 <button
-                  onClick={() => setSelected(true)}
+                  onClick={() => updateSession((previousSession) => ({ ...previousSession, selected: true }))}
                   className={[
                     'dimensional-btn py-4 rounded-lg border-b-4 flex flex-col items-center justify-center gap-1 transition-colors',
-                    selected === true
+                    session.selected === true
                       ? 'bg-primary-container border-primary-dim text-on-primary-container'
                       : 'bg-white border-surface-container-highest text-primary'
                   ].join(' ')}
@@ -132,10 +168,10 @@ export default function Game() {
                   <span className="font-headline text-lg">会火</span>
                 </button>
                 <button
-                  onClick={() => setSelected(false)}
+                  onClick={() => updateSession((previousSession) => ({ ...previousSession, selected: false }))}
                   className={[
                     'dimensional-btn py-4 rounded-lg border-b-4 flex flex-col items-center justify-center gap-1 transition-colors',
-                    selected === false
+                    session.selected === false
                       ? 'bg-error-container/20 border-error text-error'
                       : 'bg-white border-surface-container-highest text-outline'
                   ].join(' ')}
@@ -146,7 +182,7 @@ export default function Game() {
               </div>
               <button
                 onClick={handleConfirm}
-                disabled={selected === null}
+                disabled={session.selected === null}
                 className="dimensional-btn w-full bg-primary text-white font-headline text-xl py-4 rounded-xl border-b-4 border-primary-dim shadow-lg disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 确认选择
@@ -156,10 +192,10 @@ export default function Game() {
             /* After answering */
             <RevealPanel
               note={note}
-              userAnswer={answers[answers.length - 1]}
+              userAnswer={session.answers[session.answers.length - 1]}
               onDifficulty={handleDifficulty}
               onNext={handleNext}
-              difficultyDone={difficultyDone}
+              difficultyDone={session.difficultyDone}
             />
           )}
         </div>

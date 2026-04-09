@@ -3,6 +3,12 @@ import { useNavigate } from 'react-router-dom'
 import AppIcon from '../components/AppIcon'
 import NoteSubmitForm from '../components/NoteSubmitForm'
 import notesData from '../data/xhs_collection/final_notes.json'
+import { sampleNotes } from '../lib/game'
+import {
+  clearStoredGameSession,
+  createGameSession,
+  saveStoredGameSession,
+} from '../lib/gameSession'
 
 export default function Home() {
   const navigate = useNavigate()
@@ -11,7 +17,9 @@ export default function Home() {
   const [showUpload, setShowUpload] = useState(false)
 
   function startGame(count) {
-    navigate('/game', { state: { count } })
+    clearStoredGameSession()
+    saveStoredGameSession(createGameSession(sampleNotes(notesData.notes, count), count))
+    navigate('/game')
   }
 
   return (

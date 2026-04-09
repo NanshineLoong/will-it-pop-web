@@ -1,49 +1,64 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { toPng } from 'html-to-image'
-import { submitQuizComplete } from '../lib/api'
+import {
+  clearStoredGameSession,
+  loadStoredGameSession,
+  saveStoredGameSession,
+} from '../lib/gameSession'
 import { calcScore, getPersonalityLabel } from '../lib/scoring'
 import { isHotNote } from '../lib/notes'
 import AppIcon from '../components/AppIcon'
 import ShareImage from '../components/ShareImage'
 
+function createFinishedSessionFromLocationState(state) {
+  if (!state?.notes || !state?.answers || !state?.sessionId) {
+    return null
+  }
+
+  const finishedSession = {
+    status: 'finished',
+    count: state.notes.length,
+    notes: state.notes,
+    index: Math.max(state.notes.length - 1, 0),
+    answers: state.answers,
+    selected: null,
+    revealed: true,
+    difficultyDone: true,
+    sessionId: state.sessionId,
+    startedAt: Date.now() - (state.elapsedMs ?? 0),
+    finishedAt: Date.now(),
+    elapsedMs: state.elapsedMs ?? 0,
+  }
+
+  saveStoredGameSession(finishedSession)
+  return finishedSession
+}
+
 export default function Result() {
   const { state } = useLocation()
   const navigate = useNavigate()
   const shareRef = useRef(null)
-  const completionSubmittedRef = useRef(false)
+  const [session] = useState(() => {
+    const storedSession = loadStoredGameSession()
+    return storedSession?.status === 'finished'
+      ? storedSession
+      : createFinishedSessionFromLocationState(state)
+  })
 
   useEffect(() => {
-    if (!state) navigate('/')
-  }, [state, navigate])
-  const notes = state?.notes ?? []
-  const answers = state?.answers ?? []
-  const elapsedMs = state?.elapsedMs ?? 0
-  const sessionId = state?.sessionId
+    if (!session) navigate('/', { replace: true })
+  }, [navigate, session])
+
+  const notes = session?.notes ?? []
+  const answers = session?.answers ?? []
+  const elapsedMs = session?.elapsedMs ?? 0
   const correctAnswers = notes.map(isHotNote)
   const { correct, total, accuracy } = calcScore(answers, correctAnswers)
   const score = Math.round(accuracy * 100)
   const label = getPersonalityLabel(accuracy)
 
-  useEffect(() => {
-    if (!state || !sessionId || completionSubmittedRef.current) return
-
-    completionSubmittedRef.current = true
-    void submitQuizComplete({
-      sessionId,
-      questionCount: notes.length,
-      answeredCount: total,
-      correctCount: correct,
-      score,
-      elapsedMs,
-    }).then((ok) => {
-      if (!ok) {
-        console.error('Failed to persist quiz completion')
-      }
-    })
-  }, [correct, elapsedMs, notes.length, score, sessionId, state, total])
-
-  if (!state) return null
+  if (!session) return null
 
   async function handleSave() {
     const el = document.getElementById('share-image')
@@ -82,7 +97,10 @@ export default function Result() {
       <footer className="fixed bottom-0 left-0 right-0 z-40 bg-gradient-to-t from-surface via-surface/95 to-transparent px-6 pb-safe pt-4">
         <div className="max-w-md mx-auto flex gap-4">
           <button
-            onClick={() => navigate('/')}
+            onClick={() => {
+              clearStoredGameSession()
+              navigate('/')
+            }}
             className="dimensional-btn flex-1 bg-surface-container-lowest text-on-surface font-headline text-lg py-4 rounded-2xl border-b-4 border-surface-dim shadow-md flex items-center justify-center gap-2"
           >
             <AppIcon name="home" className="h-5 w-5" />
