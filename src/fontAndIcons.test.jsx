@@ -1,6 +1,5 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import { render } from '@testing-library/react'
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import Home from './pages/Home'

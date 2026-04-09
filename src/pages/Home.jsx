@@ -15,6 +15,7 @@ export default function Home() {
   const total = notesData.notes.length
   const [showRules, setShowRules] = useState(false)
   const [showUpload, setShowUpload] = useState(false)
+  const githubRepoUrl = 'https://github.com/NanshineLoong/will-it-pop-web'
 
   function startGame(count) {
     clearStoredGameSession()
@@ -24,6 +25,16 @@ export default function Home() {
 
   return (
     <div className="relative min-h-dvh bg-surface font-body overflow-hidden flex flex-col items-center justify-center">
+      <a
+        href={githubRepoUrl}
+        target="_blank"
+        rel="noreferrer"
+        aria-label="GitHub"
+        className="absolute top-4 right-3 z-20 flex h-10 w-10 items-center justify-center text-on-surface transition-transform hover:-translate-y-0.5 active:translate-y-0.5"
+      >
+        <AppIcon name="github" className="h-8 w-8" />
+      </a>
+
       {/* Decorative background icons */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden opacity-[0.07]">
         <AppIcon name="sparkles" className="absolute top-16 left-8 h-24 w-24 rotate-12 text-primary" strokeWidth={1.5} />
