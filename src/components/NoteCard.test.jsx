@@ -41,7 +41,7 @@ describe('NoteCard', () => {
     fireEvent.touchEnd(carousel, { changedTouches: [{ clientX: -500 }] })
 
     await waitFor(() => {
-      expect(screen.getByText((_, element) => element.textContent === '2/3')).toBeInTheDocument()
+      expect(screen.getByLabelText('当前图片序号')).toHaveTextContent('2/3')
     })
   })
 

@@ -5,6 +5,7 @@ import {
   getNoteImages,
   getNoteTitle,
 } from '../lib/notes'
+import AppIcon from './AppIcon'
 
 const PLACEHOLDER = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='533'%3E%3Crect width='400' height='533' fill='%23dbdddd'/%3E%3Ctext x='200' y='280' text-anchor='middle' font-size='72' fill='%23acadad'%3E%F0%9F%93%B7%3C/text%3E%3C/svg%3E"
 
@@ -160,7 +161,10 @@ export default function NoteCard({ note }) {
 
         {hasMultipleImages && (
           <>
-            <div className="absolute top-3 right-3 rounded-full bg-black/70 px-2.5 py-1 text-xs font-bold text-white">
+            <div
+              aria-label="当前图片序号"
+              className="absolute top-3 right-3 rounded-full bg-black/70 px-2.5 py-1 text-xs font-bold text-white"
+            >
               {safeCurrentIndex + 1}/{images.length}
             </div>
             <button
@@ -170,7 +174,7 @@ export default function NoteCard({ note }) {
               aria-label="上一张图片"
               className="absolute left-2 top-1/2 -translate-y-1/2 hidden sm:flex h-9 w-9 items-center justify-center rounded-full bg-white/85 text-on-surface shadow disabled:opacity-35"
             >
-              <span className="material-symbols-outlined text-xl">chevron_left</span>
+              <AppIcon name="chevronLeft" className="h-5 w-5" />
             </button>
             <button
               type="button"
@@ -179,7 +183,7 @@ export default function NoteCard({ note }) {
               aria-label="下一张图片"
               className="absolute right-2 top-1/2 -translate-y-1/2 hidden sm:flex h-9 w-9 items-center justify-center rounded-full bg-white/85 text-on-surface shadow disabled:opacity-35"
             >
-              <span className="material-symbols-outlined text-xl">chevron_right</span>
+              <AppIcon name="chevronRight" className="h-5 w-5" />
             </button>
           </>
         )}

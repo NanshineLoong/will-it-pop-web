@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import notesData from '../data/xhs_collection/final_notes.json'
 import { sampleNotes } from '../lib/game'
 import { submitFeedback } from '../lib/api'
+import AppIcon from '../components/AppIcon'
 import NoteCard from '../components/NoteCard'
 import RevealPanel from '../components/RevealPanel'
 
@@ -105,7 +106,7 @@ export default function Game() {
                       : 'bg-white border-surface-container-highest text-primary'
                   ].join(' ')}
                 >
-                  <span className="material-symbols-outlined icon-filled text-4xl">local_fire_department</span>
+                  <AppIcon name="flame" className="h-9 w-9" />
                   <span className="font-headline text-lg">会火</span>
                 </button>
                 <button
@@ -117,7 +118,7 @@ export default function Game() {
                       : 'bg-white border-surface-container-highest text-outline'
                   ].join(' ')}
                 >
-                  <span className="material-symbols-outlined text-4xl">block</span>
+                  <AppIcon name="ban" className="h-9 w-9" />
                   <span className="font-headline text-lg text-on-surface-variant">不会火</span>
                 </button>
               </div>

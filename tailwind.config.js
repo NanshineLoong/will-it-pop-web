@@ -63,9 +63,9 @@ export default {
         full: '9999px',
       },
       fontFamily: {
-        headline: ['"ZCOOL KuaiLe"', '"Plus Jakarta Sans"', 'system-ui'],
-        brush: ['"Ma Shan Zheng"', 'cursive'],
-        body: ['"Plus Jakarta Sans"', 'system-ui'],
+        headline: ['"ZCOOL KuaiLe"', '-apple-system', 'BlinkMacSystemFont', '"PingFang SC"', '"Hiragino Sans GB"', '"Microsoft YaHei"', '"Noto Sans SC"', '"Source Han Sans SC"', 'system-ui', 'sans-serif'],
+        brush: ['"ZCOOL KuaiLe"', '-apple-system', 'BlinkMacSystemFont', '"PingFang SC"', '"Hiragino Sans GB"', '"Microsoft YaHei"', '"Noto Sans SC"', '"Source Han Sans SC"', 'system-ui', 'sans-serif'],
+        body: ['-apple-system', 'BlinkMacSystemFont', '"PingFang SC"', '"Hiragino Sans GB"', '"Microsoft YaHei"', '"Noto Sans SC"', '"Source Han Sans SC"', 'system-ui', 'sans-serif'],
       },
     },
   },

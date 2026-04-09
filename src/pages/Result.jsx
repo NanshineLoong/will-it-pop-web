@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { toPng } from 'html-to-image'
 import { calcScore, getPersonalityLabel } from '../lib/scoring'
 import { isHotNote } from '../lib/notes'
+import AppIcon from '../components/AppIcon'
 import ShareImage from '../components/ShareImage'
 
 export default function Result() {
@@ -62,14 +63,14 @@ export default function Result() {
             onClick={() => navigate('/')}
             className="dimensional-btn flex-1 bg-surface-container-lowest text-on-surface font-headline text-lg py-4 rounded-2xl border-b-4 border-surface-dim shadow-md flex items-center justify-center gap-2"
           >
-            <span className="material-symbols-outlined text-xl">home</span>
+            <AppIcon name="home" className="h-5 w-5" />
             回到首页
           </button>
           <button
             onClick={handleSave}
             className="dimensional-btn flex-[1.4] bg-primary text-white font-headline text-lg py-4 rounded-2xl border-b-4 border-primary-dim shadow-lg flex items-center justify-center gap-2"
           >
-            <span className="material-symbols-outlined icon-filled text-xl">download</span>
+            <AppIcon name="download" className="h-5 w-5" />
             保存图片分享
           </button>
         </div>

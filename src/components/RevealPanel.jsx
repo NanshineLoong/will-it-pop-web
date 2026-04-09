@@ -1,4 +1,5 @@
 import { isHotNote } from '../lib/notes'
+import AppIcon from './AppIcon'
 
 function formatNum(n) {
   const value = Number(n) || 0
@@ -39,28 +40,28 @@ export default function RevealPanel({ note, userAnswer, onDifficulty, onNext, di
         <div className={`grid grid-cols-4 gap-2 py-3 border-y ${isHot ? 'border-tertiary/20' : 'border-secondary/20'}`}>
           <div className="text-center">
             <div className={`flex items-center justify-center gap-1 ${isHot ? 'text-tertiary-dim' : 'text-secondary'}`}>
-              <span className="material-symbols-outlined icon-filled text-base">favorite</span>
+              <AppIcon name="heart" className="h-4 w-4" />
               <span className="font-headline text-base">{formatNum(note.likes)}</span>
             </div>
             <span className="text-[10px] text-on-surface-variant">点赞数</span>
           </div>
           <div className="text-center">
             <div className={`flex items-center justify-center gap-1 ${isHot ? 'text-tertiary-dim' : 'text-secondary'}`}>
-              <span className="material-symbols-outlined icon-filled text-base">star</span>
+              <AppIcon name="bookmark" className="h-4 w-4" />
               <span className="font-headline text-base">{formatNum(note.collects)}</span>
             </div>
             <span className="text-[10px] text-on-surface-variant">收藏数</span>
           </div>
           <div className="text-center">
             <div className={`flex items-center justify-center gap-1 ${isHot ? 'text-tertiary-dim' : 'text-secondary'}`}>
-              <span className="material-symbols-outlined icon-filled text-base">share</span>
+              <AppIcon name="share" className="h-4 w-4" />
               <span className="font-headline text-base">{formatNum(note.shares)}</span>
             </div>
             <span className="text-[10px] text-on-surface-variant">分享数</span>
           </div>
           <div className="text-center">
             <div className={`flex items-center justify-center gap-1 ${isHot ? 'text-tertiary-dim' : 'text-secondary'}`}>
-              <span className="material-symbols-outlined icon-filled text-base">chat_bubble</span>
+              <AppIcon name="message" className="h-4 w-4" />
               <span className="font-headline text-base">{formatNum(note.comments)}</span>
             </div>
             <span className="text-[10px] text-on-surface-variant">评论数</span>
@@ -71,12 +72,12 @@ export default function RevealPanel({ note, userAnswer, onDifficulty, onNext, di
         <a
           href={note.note_url}
           target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center justify-center gap-2 w-full py-2.5 bg-white text-secondary font-headline rounded-full border-2 border-secondary-container text-sm"
-        >
-          <span className="material-symbols-outlined text-sm">link</span>
-          原笔记链接
-        </a>
+        rel="noopener noreferrer"
+        className="flex items-center justify-center gap-2 w-full py-2.5 bg-white text-secondary font-headline rounded-full border-2 border-secondary-container text-sm"
+      >
+        <AppIcon name="link" className="h-4 w-4" />
+        原笔记链接
+      </a>
       </div>
 
       {/* Difficulty rating */}

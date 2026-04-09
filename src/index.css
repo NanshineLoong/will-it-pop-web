@@ -63,9 +63,9 @@
   --radius-xl: 4rem;
 
   /* Fonts */
-  --font-headline: "ZCOOL KuaiLe", "Plus Jakarta Sans", system-ui;
-  --font-brush: "Ma Shan Zheng", cursive;
-  --font-body: "Plus Jakarta Sans", system-ui;
+  --font-headline: "ZCOOL KuaiLe", -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", "Source Han Sans SC", system-ui, sans-serif;
+  --font-brush: "ZCOOL KuaiLe", -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", "Source Han Sans SC", system-ui, sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", "Source Han Sans SC", system-ui, sans-serif;
 }
 
 @layer base {
@@ -101,24 +101,6 @@
   }
   .tilt-right {
     transform: rotate(1.5deg);
-  }
-
-  .material-symbols-outlined {
-    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-    font-family: 'Material Symbols Outlined';
-    font-style: normal;
-    font-size: 24px;
-    line-height: 1;
-    letter-spacing: normal;
-    text-transform: none;
-    display: inline-block;
-    white-space: nowrap;
-    direction: ltr;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  .icon-filled {
-    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
   }
 }
 

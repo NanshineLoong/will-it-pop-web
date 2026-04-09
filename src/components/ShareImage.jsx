@@ -1,4 +1,5 @@
 import { forwardRef } from 'react'
+import AppIcon from './AppIcon'
 
 const personalityDesc = {
   '爆款雷达型选手': '你对流量有着天然的嗅觉，总能在平凡的文字中精准锁定那抹爆款的基因。下一个顶流推手就是你！',
@@ -21,8 +22,8 @@ const ShareImage = forwardRef(function ShareImage({ score, correct, total, label
     <div
       ref={ref}
       id="share-image"
-      style={{ width: 375, fontFamily: 'ZCOOL KuaiLe, Plus Jakarta Sans, sans-serif' }}
-      className="relative bg-white rounded-[2.5rem] border-2 border-surface-container-high shadow-xl overflow-hidden"
+      style={{ width: 375 }}
+      className="relative bg-white rounded-[2.5rem] border-2 border-surface-container-high shadow-xl overflow-hidden font-body"
     >
       {/* Corner decorations */}
       <div className="absolute top-4 left-4 w-8 h-8 border-t-4 border-l-4 border-primary/20 rounded-tl-xl" />
@@ -47,7 +48,7 @@ const ShareImage = forwardRef(function ShareImage({ score, correct, total, label
           </div>
           <div className="flex items-center gap-3">
             <span className="h-px w-6 bg-primary/20" />
-            <span className="material-symbols-outlined icon-filled text-primary text-lg">stars</span>
+            <AppIcon name="sparkles" className="h-[18px] w-[18px] text-primary" />
             <span className="h-px w-6 bg-primary/20" />
           </div>
         </div>
@@ -76,7 +77,7 @@ const ShareImage = forwardRef(function ShareImage({ score, correct, total, label
           <div className="bg-surface-container-low p-3 rounded-2xl border border-surface-container-high/30">
             {/* QR code will be injected here once user provides it */}
             <div className="w-24 h-24 flex items-center justify-center text-outline-variant text-xs">
-              <span className="material-symbols-outlined text-5xl opacity-30">qr_code_2</span>
+              <AppIcon name="qr" className="h-12 w-12 opacity-30" strokeWidth={1.75} />
             </div>
           </div>
           <p className="text-on-surface-variant/60 text-xs font-bold tracking-wider">扫描二维码进入网址</p>

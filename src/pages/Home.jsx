@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import AppIcon from '../components/AppIcon'
 import NoteSubmitForm from '../components/NoteSubmitForm'
 import notesData from '../data/xhs_collection/final_notes.json'
 
@@ -17,10 +18,10 @@ export default function Home() {
     <div className="relative min-h-dvh bg-surface font-body overflow-hidden flex flex-col items-center justify-center">
       {/* Decorative background icons */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden opacity-[0.07]">
-        <span className="material-symbols-outlined absolute top-16 left-8 text-[6rem] rotate-12 text-primary">auto_awesome</span>
-        <span className="material-symbols-outlined absolute top-1/4 right-4 text-[5rem] -rotate-12 text-tertiary">rocket_launch</span>
-        <span className="material-symbols-outlined absolute bottom-1/3 left-[-1rem] text-[7rem] rotate-45 text-secondary">thumb_up</span>
-        <span className="material-symbols-outlined absolute bottom-10 right-8 text-[6rem] -rotate-12 text-primary-container">favorite</span>
+        <AppIcon name="sparkles" className="absolute top-16 left-8 h-24 w-24 rotate-12 text-primary" strokeWidth={1.5} />
+        <AppIcon name="rocket" className="absolute top-1/4 right-4 h-20 w-20 -rotate-12 text-tertiary" strokeWidth={1.5} />
+        <AppIcon name="thumbsUp" className="absolute bottom-1/3 left-[-1rem] h-28 w-28 rotate-45 text-secondary" strokeWidth={1.5} />
+        <AppIcon name="heart" className="absolute bottom-10 right-8 h-24 w-24 -rotate-12 text-primary-container" strokeWidth={1.5} />
       </div>
 
       <main className="relative z-10 w-full max-w-md mx-auto flex flex-col items-center px-6 py-12 gap-10">
@@ -31,7 +32,7 @@ export default function Home() {
               这篇会火吗？
             </h1>
             <div className="absolute -top-4 -right-8">
-              <span className="material-symbols-outlined icon-filled text-tertiary-container text-4xl">local_fire_department</span>
+              <AppIcon name="flame" className="h-10 w-10 text-tertiary-container" />
             </div>
           </div>
           <p className="font-brush text-2xl text-on-surface-variant tilt-right">
@@ -46,7 +47,7 @@ export default function Home() {
             onClick={() => setShowRules(true)}
           >
             <div className="w-16 h-16 rounded-full bg-white border-4 border-primary text-primary flex items-center justify-center sticker-shadow group-active:scale-95 transition-transform">
-              <span className="material-symbols-outlined icon-filled text-4xl">help_center</span>
+              <AppIcon name="help" className="h-9 w-9" />
             </div>
             <span className="font-headline text-primary font-bold text-lg">规则</span>
           </button>
@@ -62,7 +63,7 @@ export default function Home() {
               <span className="block font-headline font-black text-3xl">10 题快速测试</span>
               <span className="text-sm font-bold opacity-80">3分钟挑战你的直觉</span>
             </div>
-            <span className="material-symbols-outlined text-4xl">bolt</span>
+            <AppIcon name="zap" className="h-9 w-9" />
           </button>
 
           <button
@@ -74,7 +75,7 @@ export default function Home() {
               <span className="block font-headline font-black text-3xl">100 题精准测算</span>
               <span className="text-sm font-bold opacity-80">深度解析你的审美</span>
             </div>
-            <span className="material-symbols-outlined text-4xl">insights</span>
+            <AppIcon name="chart" className="h-9 w-9" />
           </button>
         </section>
 
@@ -84,7 +85,7 @@ export default function Home() {
             onClick={() => setShowUpload(true)}
             className="dimensional-btn flex items-center gap-2 bg-secondary-container text-on-secondary-container px-6 py-3 rounded-full border-b-4 border-secondary-dim font-headline font-bold sticker-shadow"
           >
-            <span className="material-symbols-outlined text-xl">upload_file</span>
+            <AppIcon name="upload" className="h-5 w-5" />
             上传笔记
           </button>
         </section>
@@ -104,11 +105,11 @@ export default function Home() {
               className="absolute top-4 right-4 text-outline"
               onClick={() => setShowRules(false)}
             >
-              <span className="material-symbols-outlined">close</span>
+              <AppIcon name="close" className="h-5 w-5" />
             </button>
             <div className="text-center space-y-4">
               <div className="inline-block p-4 bg-primary-container rounded-full mb-2">
-                <span className="material-symbols-outlined icon-filled text-primary text-4xl">tips_and_updates</span>
+                <AppIcon name="lightbulb" className="h-10 w-10 text-primary" />
               </div>
               <h3 className="font-headline text-2xl text-primary">什么叫"火"？</h3>
               <div className="text-left space-y-3 text-on-surface-variant font-medium text-sm leading-relaxed">
@@ -146,7 +147,7 @@ export default function Home() {
               className="absolute top-4 right-4 text-outline"
               onClick={() => setShowUpload(false)}
             >
-              <span className="material-symbols-outlined">close</span>
+              <AppIcon name="close" className="h-5 w-5" />
             </button>
             <div className="space-y-5">
               <div className="text-center">
