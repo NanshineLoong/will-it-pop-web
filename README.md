@@ -1,11 +1,11 @@
 <div align="center">
 
-<h2 align="center">这篇会火吗？</h2>
+<h1 align="center">这篇会火吗？</h1>
 
 <table>
   <tr>
-    <td><img src="./docs/screenshots/home.png" alt="首页截图" width="420" /></td>
-    <td><img src="./docs/screenshots/result.png" alt="结果截图" width="420" /></td>
+    <td><img src="./docs/screenshots/home.png" alt="首页截图" width="300" /></td>
+    <td><img src="./docs/screenshots/result.png" alt="结果截图" width="300" /></td>
   </tr>
 </table>
 
@@ -26,9 +26,9 @@
 
 ## 数据
 
-用 [xiaohongshu-cli](https://github.com/jackwener/xiaohongshu-cli) 爬了 100 条笔记，数据在 `[src/data/xhs_collection/final_notes.json](./src/data/xhs_collection/final_notes.json)`。
+用 [xiaohongshu-cli](https://github.com/jackwener/xiaohongshu-cli) 爬了 100 条笔记，数据在[这里](./src/data/xhs_collection/final_notes.json)。
 
-过滤条件：
+数据过滤条件：
 
 - 博主粉丝数 ≤ 500
 - 发布时间距今至少 7 天
@@ -48,4 +48,4 @@ npm run dev
 
 ## 许可证
 
-本项目以 [GNU Affero General Public License v3.0](https://www.gnu.org/licenses/agpl-3.0.html)（AGPL-3.0）发布。
+本项目以 [AGPL-3.0](https://www.gnu.org/licenses/agpl-3.0.html) 发
