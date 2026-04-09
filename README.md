@@ -48,4 +48,4 @@ npm run dev
 
 ## 许可证
 
-本项目以 [AGPL-3.0](https://www.gnu.org/licenses/agpl-3.0.html) 发
+本项目以 [AGPL-3.0](https://www.gnu.org/licenses/agpl-3.0.html) 发布。
